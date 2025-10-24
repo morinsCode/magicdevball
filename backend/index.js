@@ -14,15 +14,9 @@ const client = new Client({
 
 client.connect();
 
-/* app.get("/api", async (_request, response) => {
-  const { rows } = await client.query(
-    "SELECT * FROM answers WHERE answer = $1",
-    ["Have you tried console.log?"]
-  );
+app.use(express.json());
 
-  response.send(rows);
-});
- */
+// === ROUTES ===
 
 app.get("/api", async (_request, response) => {
   const { rows } = await client.query(
@@ -31,6 +25,29 @@ app.get("/api", async (_request, response) => {
 
   response.send(rows);
 });
+
+app.post("/api", async (req, res) => {
+  try {
+    const { answer } = req.body;
+    if (!answer || typeof answer !== "string") {
+      return res
+        .status(400)
+        .json({ error: "Missing or invalid 'answer' field" });
+    }
+
+    const insert = await client.query(
+      "INSERT INTO answers(answer) VALUES($1) RETURNING *;",
+      [answer]
+    );
+
+    return res.status(201).json(insert.rows[0]);
+  } catch (err) {
+    console.error("Failed to insert answer:", err);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// ==== SERVE FRONTEND ====
 
 app.use(express.static(path.join(path.resolve(), "dist")));
 
