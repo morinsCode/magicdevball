@@ -1,0 +1,30 @@
+# General
+.env
+.DS_Store
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Node modules
+**/node_modules/
+
+# Editor & IDEs
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Frontend build output
+frontend/dist/
+frontend/dist-ssr/
+
+
+backend/dist/
